@@ -27,15 +27,13 @@ export const LoggedIn = {
   },
   play: async ({ args, canvasElement, step }) => {
     expect(canvasElement).toBeDefined();
-    console.log('canvasElement', canvasElement)
     await virtual.start({ container: canvasElement });
-    const ugh = []
+    const spoken = []
     while ((await virtual.lastSpokenPhrase()) !== "end of banner") {
-      ugh.push(await virtual.lastSpokenPhrase())
-      console.log('ugh', ugh[ugh.length - 1])
+      spoken.push(await virtual.lastSpokenPhrase())
+      console.log('spoken', spoken[spoken.length - 1])
       await virtual.next();
     }
-    console.log('ugh', ugh.join("',\n'"))
     const expected = [
       'banner',
       'heading, Acme, level 1',
@@ -51,4 +49,8 @@ export const LoggedIn = {
   }
 };
 
-export const LoggedOut = {};
+export const LoggedOut = {
+  play: async ({ args, canvasElement, step }) => {
+    expect(canvasElement).toBeDefined();
+  }
+};
