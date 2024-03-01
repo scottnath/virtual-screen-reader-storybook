@@ -1,8 +1,11 @@
 POC: Virtual Screen Reader in Storybook
 ---
 
+This proof of concept shows [Virtual Screen Reader](https://github.com/guidepup/virtual-screen-reader) working with a default HTML/Vite setup of Storybook from [Storybook.new](https://storybook.new) ([original storybook source repo](https://github.com/storybookjs/sandboxes/tree/next/html-vite/default-js)). This was made to show a working version in response to [a VSR issue about ESM requirements](https://github.com/guidepup/virtual-screen-reader/issues/49).
 
-This proof of concept shows [Virtual Screen Reader](https://github.com/guidepup/virtual-screen-reader) working with a default HTML/Vite setup of Storybook from [Storybook.new](https://storybook.new) ([original source repo](https://github.com/storybookjs/sandboxes/tree/next/html-vite/default-js)). This was made to show a working version in response to [a VSR issue about ESM requirements](https://github.com/guidepup/virtual-screen-reader/issues/49)
+See article for details:
+
+**[Simple setup: Virtual Screen Reader in Storybook](https://scottnath.com/blahg/virtual-screen-reader-with-storybook/)**
 
 ## Working example
 
@@ -13,7 +16,7 @@ This proof of concept shows [Virtual Screen Reader](https://github.com/guidepup/
 
 Open the running storybook site in a new tab or window - otherwise the Interaction tests intermittently don't show up.
 
-## Modifications
+## Modifications from default Storybook install
 
 ### Install `virtual-screen-reader`
 
@@ -38,25 +41,20 @@ export const LoggedIn = {
     },
   },
   play: async ({ args, canvasElement, step }) => {
-    expect(canvasElement).toBeDefined();
     await virtual.start({ container: canvasElement });
-    const spoken = []
     while ((await virtual.lastSpokenPhrase()) !== "end of banner") {
-      spoken.push(await virtual.lastSpokenPhrase())
-      console.log('spoken', spoken[spoken.length - 1])
       await virtual.next();
     }
     const expected = [
       'banner',
       'heading, Acme, level 1',
       'Welcome,',
-      'Jane Doe',
+      args.user.name,
       '!',
       'button, Log out',
       'end of banner'
     ]
     expect(await virtual.spokenPhraseLog()).toEqual(expected);
-    // Stop your virtual screen reader instance
     await virtual.stop();
   }
 };
