@@ -27,25 +27,27 @@ export const LoggedIn = {
   },
   play: async ({ args, canvasElement, step }) => {
     expect(canvasElement).toBeDefined();
-    await virtual.start({ container: canvasElement });
-    const spoken = []
-    while ((await virtual.lastSpokenPhrase()) !== "end of banner") {
-      spoken.push(await virtual.lastSpokenPhrase())
-      console.log('spoken', spoken[spoken.length - 1])
-      await virtual.next();
-    }
-    const expected = [
-      'banner',
-      'heading, Acme, level 1',
-      'Welcome,',
-      'Jane Doe',
-      '!',
-      'button, Log out',
-      'end of banner'
-    ]
-    expect(await virtual.spokenPhraseLog()).toEqual(expected);
-    // Stop your virtual screen reader instance
-    await virtual.stop();
+    await step('Screen reader tests', async () => {
+      await virtual.start({ container: canvasElement });
+      const spoken = []
+      while ((await virtual.lastSpokenPhrase()) !== "end of banner") {
+        spoken.push(await virtual.lastSpokenPhrase())
+        console.log('spoken', spoken[spoken.length - 1])
+        await virtual.next();
+      }
+      const expected = [
+        'banner',
+        'heading, Acme, level 1',
+        'Welcome,',
+        args.user.name,
+        '!',
+        'button, Log out',
+        'end of banner'
+      ]
+      expect(await virtual.spokenPhraseLog()).toEqual(expected);
+      // Stop your virtual screen reader instance
+      await virtual.stop();
+    });
   }
 };
 
