@@ -18,6 +18,7 @@ export default {
 
 // Default LoggedIn story
 export const LoggedIn = {
+  tags: ['a11y'],
   args: {
     user: {
       name: 'Jane Doe',
